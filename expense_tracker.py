@@ -8,19 +8,33 @@ def add_expense():
     amount = float(input("Enter the amount : "))
     category = input("Enter the category : ")
     expenses.append({"amount": amount, "category": category})
+
+    with open("expenses.txt", "a") as file:
+        file.write(f"{category}, {amount}\n")
+
     print("Expense added \n")
 
 # define view expense function with condition if no expense added
 
 
 def view_expense():
-    if not expenses:
-        print("No expense added\n")
-        return
 
-    for exp in expenses:
-        print(f"category : {exp['category']}, amount : {exp['amount']}")
-    print()
+    try:
+        with open("expenses.txt", "r") as file:
+            lines = file.readlines()
+
+        if not lines:
+            print("No expense added\n")
+            return
+
+        for line in lines:
+            category, amount = line.strip().split(",")
+            amount = float(amount)
+            print(f"category : {category}, amount : {amount}")
+
+        print()
+    except FileNotFoundError:
+        print("No expense file found")
 
 
 # define total expense function
@@ -39,7 +53,7 @@ while True:
     print("3. Total expense")
     print("4. Exit")
     # giving choice to user
-    choice = input("Choose an option")
+    choice = input("Choose an option : ")
 
     if choice == "1":
         add_expense()

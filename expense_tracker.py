@@ -10,7 +10,7 @@ def add_expense():
     expenses.append({"amount": amount, "category": category})
 
     with open("expenses.txt", "a") as file:
-        file.write(f"{category}, {amount}\n")
+        file.write(f"{category},{amount}\n")
 
     print("Expense added \n")
 
@@ -30,7 +30,7 @@ def view_expense():
         for line in lines:
             category, amount = line.strip().split(",")
             amount = float(amount)
-            print(f"category : {category}, amount : {amount}")
+            print(f"Category : {category}, Amount : {amount}")
 
         print()
     except FileNotFoundError:
@@ -40,10 +40,19 @@ def view_expense():
 # define total expense function
 def total_expense():
     total = 0
-    for exp in expenses:
-        total += exp['amount']
+    try:
+        with open("expenses.txt", "r") as file:
+            lines = file.readlines()
 
-    print("Total amount", total)
+        for line in lines:
+            category, amount = line.strip().split(",")
+            amount = float(amount)
+            total += amount
+
+        print("Total amount", total)
+
+    except FileNotFoundError:
+        print("No expense file found")
 
 
 # loop for selecting what to do
